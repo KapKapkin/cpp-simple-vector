@@ -30,3 +30,16 @@
 *.exe
 *.out
 *.app
+
+.vs
+.sln
+.filters
+.user
+.vcxproj
+/simple-vector/array_ptr.h
+/simple-vector/cpp-simple-vector.sln
+/simple-vector/cpp-simple-vector.vcxproj.filters
+/simple-vector/cpp-simple-vector.vcxproj
+/simple-vector/cpp-simple-vector.vcxproj.user
+/simple-vector/x64/Debug
+/simple-vector/cpp-simp.9B21B709/x64/Debug
