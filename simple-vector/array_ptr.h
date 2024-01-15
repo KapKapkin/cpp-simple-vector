@@ -4,6 +4,7 @@
 #include <cassert>
 #include <cstdlib>
 #include <iostream>
+#include <utility>
 
 template <typename Type>
 class ArrayPtr {
@@ -24,6 +25,19 @@ public:
 
     // Запрещаем копирование
     ArrayPtr(const ArrayPtr&) = delete;
+
+    ArrayPtr(ArrayPtr&& other) {
+        swap(other);
+    }
+
+    ArrayPtr& operator=(ArrayPtr&& rhs) {
+        if (this == &rhs) {
+            return *this;
+        }
+        ArrayPtr tmp(std::move(rhs));
+        swap(tmp);
+        return *this;
+    }
 
     ~ArrayPtr() {
         delete[] raw_ptr_;

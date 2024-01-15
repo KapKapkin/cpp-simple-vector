@@ -67,11 +67,8 @@ public:
         return *this;
     }
 
-    SimpleVector(SimpleVector&& other) :elements_(std::move(other.elements_.Release())) {
-        capacity_ = std::move(other.capacity_);
-        size_ = std::move(other.size_);
-        other.capacity_ = 0;
-        other.size_ = 0;
+    SimpleVector(SimpleVector&& other) {
+        swap(std::move(other));
     }
 
     SimpleVector& operator=(SimpleVector&& rhs) {
@@ -98,6 +95,7 @@ public:
     }
 
     Iterator Insert(ConstIterator pos, const Type& value) {
+        assert(pos >= begin() && pos <= end());
         int n = std::distance(cbegin(), pos);
         if (pos == end()) {
             PushBack(value);
@@ -111,6 +109,7 @@ public:
     }
 
     Iterator Insert(ConstIterator pos, Type&& value) {
+        assert(pos >= begin() && pos <= end());
         int n = std::distance(cbegin(), pos);
         if (pos == end()) {
             PushBack(std::move(value));
@@ -124,6 +123,7 @@ public:
     }
 
     Iterator Erase(ConstIterator pos) {
+        assert(pos >= begin() && pos < end());
         Iterator p = begin() + std::distance(cbegin(), pos);
         std::copy(std::make_move_iterator(p + 1), std::make_move_iterator(end()), p);
         Resize(size_ - 1);
@@ -143,9 +143,12 @@ public:
         if (this == &other) {
             return;
         }
-        elements_.swap(other.elements_);
+        elements_ = std::move(other.elements_);
         size_ = std::move(other.size_);
         capacity_ = std::move(other.capacity_);
+
+        other.size_ = 0;
+        other.capacity_ = 0;
     }
 
     // Возвращает количество элементов в массиве
@@ -166,11 +169,13 @@ public:
 
     // Возвращает ссылку на элемент с индексом index
     Type& operator[](size_t index) noexcept {
+        assert(index < size_);
         return elements_[index];
     }
 
     // Возвращает константную ссылку на элемент с индексом index
     const Type& operator[](size_t index) const noexcept {
+        assert(index < size_);
         return elements_[index];
     }
 
